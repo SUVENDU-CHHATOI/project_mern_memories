@@ -7,7 +7,7 @@ import {
   Typography,
   Container,
 } from "@material-ui/core";
-import GoogleSignInButton from "../../components/GoogleSignInButton";
+import GoogleSignInButton from "../GoogleSignInButton";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";

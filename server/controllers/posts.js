@@ -31,7 +31,7 @@ export const getPostsBySearch = async (req, res) => {
   const { searchQuery, tags } = req.query;
   try {
     const title = new RegExp(searchQuery, "i"); // we are converting the searhQuery passed as a string from frontend to backend beacuse that will help mongodb database to search the query in a case insensitive way
-    const tagsArray = tags ? tags.split(",") : [];
+    const tagsArray = tags ? tags?.split(",") : [];
     const posts = await PostMessage.find({
       $or: [{ title }, { tags: { $in: tagsArray } }],
     });
@@ -107,18 +107,32 @@ export const likePost = async (req, res) => {
 
   const post = await PostMessage.findById(id);
 
-  const index = post.likes.findIndex((id) => id === String(req.userId));
+  const index = post?.likes?.findIndex((id) => id === String(req.userId));
 
   if (index === -1) {
     post.likes.push(req.userId);
   } else {
-    post.likes = post.likes.filter((id) => id !== String(req.userId));
+    post.likes = post?.likes?.filter((id) => id !== String(req.userId));
   }
 
   const updatedPost = await PostMessage.findByIdAndUpdate(id, post, {
     new: true,
   });
 
+  res.json(updatedPost);
+};
+
+export const commentPost = async (req, res) => {
+  console.log("inside controller");
+  const { id } = req.params;
+  const { value } = req.body;
+
+  const post = await PostMessage.findById(id);
+  post?.comments?.push(value);
+
+  const updatedPost = await PostMessage.findByIdAndUpdate(id, post, {
+    new: true,
+  });
   res.json(updatedPost);
 };
 
